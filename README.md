@@ -1,88 +1,44 @@
-\# C++ to PlantUML Visualization Toolkit (CPPTOPUML)
-
-
-
-\## 1. Overview
+# C++ to PlantUML Visualization Toolkit (Arduino-To-PUML)
 
 This toolkit provides a structured methodology and automation pipeline for transforming embedded C/C++ source code (Arduino, STM32, ESP32) into professional-grade PlantUML architecture diagrams.
 
+## 📂 Project Structure
 
+| File | Description |
+| :--- | :--- |
+| **`arduino_to_graph_instructions.txt`** | The core AI instruction set for parsing code and generating standardized diagrams. |
+| **`render_diagrams.py`** | Python automation script to batch-convert `.puml` files to PNG images. |
+| **`plantuml.jar`** | Java-based rendering engine (auto-downloaded by script). |
+| **`img/`** | Output directory containing generated visual diagrams. |
 
-\## 2. Contents
+## 🚀 Workflow
 
-\*   \*\*`arduino\_to\_graph\_instructions.txt`\*\*: The core instruction set. Defines the rules for parsing code and generating standardized Hardware, Sequence, and Data Flow diagrams.
+### 1. Analyze & Generate
+Use an LLM (like Gemini) with the `arduino_to_graph_instructions.txt` prompt to parse your code files.
+*   **Input:** Your `.ino` or `.c` source files.
+*   **Action:** Provide the instruction set to the LLM and ask it to apply it to your files.
+*   **Output:** Three `.puml` files per system (Hardware, Sequence, DataFlow).
 
-\*   \*\*`render\_diagrams.py`\*\*: A Python automation script that batch-converts all `.puml` files in the directory to PNG images.
-
-\*   \*\*`plantuml.jar`\*\*: The Java-based rendering engine (downloaded automatically by the script if missing).
-
-\*   \*\*`\*.puml` files\*\*: The generated PlantUML source files for your specific systems (SIMPLEVCU, STM32, ESP32).
-
-\*   \*\*`img/`\*\*: The output directory containing the generated visual diagrams.
-
-
-
-\## 3. Workflow
-
-
-
-\### Step 1: Analyze \& Generate
-
-Use an LLM (like Gemini) with the `arduino\_to\_graph\_instructions.txt` prompt to parse your code files.
-
-\*   \*\*Input:\*\* Your `.ino` or `.c` source files.
-
-\*   \*\*Prompt:\*\* "Apply @arduino\_to\_graph\_instructions.txt to my code."
-
-\*   \*\*Output:\*\* Three `.puml` files per system (Hardware, Sequence, DataFlow).
-
-
-
-\### Step 2: Render Visuals
-
-Run the automation script to generate images.
-
+### 2. Render Visuals
+Run the automation script to generate high-resolution images:
 ```bash
-
-python render\_diagrams.py
-
+python render_diagrams.py
 ```
+*   Ensures **Java** is available.
+*   Automatically acquires `plantuml.jar` if missing.
+*   Processes all diagrams and saves them to the `img/` directory.
 
-\*   The script will check for Java.
+### 3. Review Architecture
+Open the `img/` folder to view the professional documentation:
+*   **Hardware Architecture:** Physical pinouts, wiring, and component grouping.
+*   **Logic Sequence:** Timing-accurate flow of interrupts, state machines, and main loops.
+*   **Data Variable Flow:** Byte-level serialization maps of structs and communication packets.
 
-\*   It will download `plantuml.jar` if needed.
+## 📊 Diagram Standards
+*   **Hardware:** "Rich Style" featuring embedded pinout tables, component color-coding, and specific chip part numbers.
+*   **Sequence:** Strict participant aliasing, logical grouping, and microsecond-level timing notes.
+*   **Data Flow:** Comprehensive, non-truncated field lists including exact C data types and transformation logic.
 
-\*   It will process every `.puml` file and save PNGs to the `img/` folder.
-
-
-
-\### Step 3: Review
-
-Open the `img/` folder to view the professional diagrams:
-
-\*   \*\*Hardware:\*\* Pinouts, wiring, and component architecture.
-
-\*   \*\*Sequence:\*\* Timing diagrams of interrupts and main loops.
-
-\*   \*\*DataFlow:\*\* Full serialization maps of structs and packets.
-
-
-
-\## 4. Diagram Standards (defined in instructions)
-
-\*   \*\*Hardware:\*\* "Rich Style" with embedded pinout tables and pastel colors.
-
-\*   \*\*Sequence:\*\* Strict participant aliasing and logical grouping.
-
-\*   \*\*Data Flow:\*\* Complete, non-truncated field lists with C data types.
-
-
-
-\## 5. Requirements
-
-\*   \*\*Python 3.x\*\*
-
-\*   \*\*Java Runtime Environment (JRE)\*\* (for PlantUML)
-
-
-
+## 🛠 Requirements
+*   **Python 3.x**
+*   **Java Runtime Environment (JRE)**
