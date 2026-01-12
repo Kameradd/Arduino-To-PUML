@@ -1,0 +1,111 @@
+# Instruction Set: Arduino/C Code to PlantUML Architecture (Standardized)
+
+## 1. Objective
+Transform Arduino/C source code into professional PlantUML diagrams. The output must include three distinct diagram types per system: Hardware, Sequence, and Data Flow.
+
+## 2. Assumptions
+- **Source Language:** Standard C/C++ (Arduino flavor).
+- **Target Visualization:** Professional, "Datasheet-Style" documentation suitable for engineering reviews.
+
+## 3. General Style Guidelines (Apply to ALL)
+- **Theme:** `!theme plain` with `skinparam shadowing true` and `skinparam roundcorner 10`.
+- **Font:** `skinparam defaultFontName Segoe UI`.
+- **Colors:**
+  - MCUs: `#81D4FA` (Light Blue)
+  - Notes: `#FFF9C4` (Light Yellow)
+  - External Sensors: `#A5D6A7` (Green)
+  - Actuators: `#FFCDD2` (Red)
+  - Data Links: `#4FC3F7` (Blue)
+
+## 4. Diagram Type 1: Hardware Architecture (Rich Style)
+**Goal:** Visualize physical wiring and pinouts.
+**Format:** Central MCU Component + Embedded Note Tables.
+
+### Template:
+```plantuml
+@startuml
+title System Name Hardware Architecture (Rich)
+
+skinparam componentStyle rectangle
+skinparam linetype ortho
+skinparam nodesep 80
+skinparam ranksep 80
+
+package "Specific MCU Part Number" {
+    component "Core System" as MCU <<Microcontroller>> #81D4FA
+}
+
+' Pinout Tables inside Notes
+note right of MCU #FFF9C4
+  <size:12><b>Interface Name</b></size>
+  | <#EEEEEE>**Pin** | <#EEEEEE>**Func** | <#EEEEEE>**Target** |
+  | PB8 | CAN RX | Device A |
+  | PB9 | CAN TX | Device A |
+end note
+
+package "External Group" #E8F5E9 {
+    [Device A] #A5D6A7
+}
+
+MCU -right-> [Device A] : <color:Red>Protocol Name
+@enduml
+```
+
+## 5. Diagram Type 2: Sequence Diagram (Logic Flow)
+**Goal:** Visualize timing, interrupts, and main loop execution.
+**Format:** Strict participant aliases.
+
+### Rules:
+- **Aliases:** ALWAYS use aliases. `participant "Long Name" as ALIAS`.
+- **Grouping:** Use `group` blocks for Periodic Tasks (e.g., "100Hz Loop").
+- **Precision:** Mention `micros()` or specific flags used in code.
+
+## 6. Diagram Type 3: Data Flow (Serialization)
+**Goal:** Map internal structs to external packets byte-by-byte.
+**Format:** Object Diagram with complete field lists.
+
+### Rules:
+- **No Truncation:** List EVERY member variable and EVERY packet byte.
+- **Types:** Include C types (e.g., `float`, `uint16_t`).
+- **Arrows:** Connect Objects, not fields. Label arrows with transformation logic.
+
+### Template:
+```plantuml
+@startuml
+title System Name Data Variable Flow
+
+object "Internal Struct" as STRUCT {
+    float rpm
+    uint16_t voltage
+}
+
+object "Binary Packet" as PKT {
+    Byte 0-3: float rpm
+    Byte 4-5: uint16_t voltage
+}
+
+STRUCT --> PKT : "Serialization (memcpy)"
+PKT --> "UART Bus" : "Transmit"
+@enduml
+```
+
+## 7. Automation & Rendering
+To maintain an up-to-date visual documentation library, automate the rendering process from `.puml` to `.png`.
+
+### 7.1. Rendering Requirements
+- **Tool:** `plantuml.jar` (v1.2024+ recommended).
+- **Runtime:** Java Runtime Environment (JRE).
+- **Command:** `java -jar plantuml.jar -tpng -o img <file>.puml`.
+
+### 7.2. Automation Script (Python)
+Use a script to perform batch processing:
+1. **Discovery:** Scan the directory for all files matching `*.puml`.
+2. **Dependency Check:** Ensure `java` is accessible and `plantuml.jar` exists.
+3. **Execution:** Loop through files and execute the rendering command.
+4. **Error Handling:** Check process exit codes (0 = Success). Capture and log `stderr` for failed renders.
+5. **Organization:** Direct all output images to a dedicated `img/` subdirectory.
+
+### 7.3. Version Control Recommendation
+- **Commit:** Always commit the `.puml` source files.
+- **Ignore:** Optionally ignore the generated `img/*.png` files to reduce repository size, or commit them for easy viewing in web interfaces (e.g., GitHub READMEs).
+
