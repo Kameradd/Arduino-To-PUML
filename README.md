@@ -42,3 +42,6 @@ Open the `img/` folder to view the professional documentation:
 ## 🛠 Requirements
 *   **Python 3.x**
 *   **Java Runtime Environment (JRE)**
+  
+### Third-Party Licenses
+*   **PlantUML (`plantuml.jar`)**: Distributed under the [GNU GPL license](https://plantuml.com/license). We include the binary for convenience and offline usage.
