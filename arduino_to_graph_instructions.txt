@@ -18,10 +18,16 @@ Transform Arduino/C source code into professional PlantUML diagrams. The output 
   - Data Links: `#4FC3F7` (Blue)
 
 ## 4. Diagram Type 1: Hardware Architecture (Rich Style)
-**Goal:** Visualize physical wiring and pinouts.
-**Format:** Central MCU Component + Embedded Note Tables.
+**Goal:** Visualize physical wiring, pinouts, and protocol interfaces.
+**Format:** Central MCU Component + Embedded Note Tables + External Components with embedded protocol details.
 
-### Template:
+### 4.1. Rules
+1.  **Clean Arrows:** Connection arrows must NOT have text labels.
+2.  **Embedded Protocols:** Protocol type and speed (e.g., "CAN 500k") must be written inside the external component's box using a newline (`\n`) and smaller font tag.
+3.  **Detailed Pinouts:** Specific pin numbers (e.g., "PB8", "Pin 13") must reside in table-formatted Notes attached to the MCU, never on the diagram lines.
+4.  **Explicit Syntax:** Use `component "Name" as Alias` syntax instead of `[Name]` to ensure robustness with formatting tags.
+
+### 4.2. Template
 ```plantuml
 @startuml
 title System Name Hardware Architecture (Rich)
@@ -31,23 +37,25 @@ skinparam linetype ortho
 skinparam nodesep 80
 skinparam ranksep 80
 
-package "Specific MCU Part Number" {
+package "Teensy 4.1" {
     component "Core System" as MCU <<Microcontroller>> #81D4FA
 }
 
 ' Pinout Tables inside Notes
 note right of MCU #FFF9C4
-  <size:12><b>Interface Name</b></size>
-  | <#EEEEEE>**Pin** | <#EEEEEE>**Func** | <#EEEEEE>**Target** |
-  | PB8 | CAN RX | Device A |
-  | PB9 | CAN TX | Device A |
+  <size:12><b>Communication Interfaces</b></size>
+  | <#EEEEEE>**Pin** | <#EEEEEE>**Function** | <#EEEEEE>**Target Device** |
+  | FlexCAN1 | CAN Bus Transmit/Receive | Daly BMS |
+  | Serial2 | UART RX/TX | Telemetry Radio |
 end note
 
 package "External Group" #E8F5E9 {
-    [Device A] #A5D6A7
+    component "Device Name\n<size:10>Protocol Speed</size>" as DEV1 #A5D6A7
+    component "Sensor Name\n<size:10>Analog In</size>" as SENS1 #A5D6A7
 }
 
-MCU -right-> [Device A] : <color:Red>Protocol Name
+MCU -right-> DEV1 : <color:Red> 
+MCU -down-> SENS1 : <color:Green> 
 @enduml
 ```
 
@@ -108,4 +116,3 @@ Use a script to perform batch processing:
 ### 7.3. Version Control Recommendation
 - **Commit:** Always commit the `.puml` source files.
 - **Ignore:** Optionally ignore the generated `img/*.png` files to reduce repository size, or commit them for easy viewing in web interfaces (e.g., GitHub READMEs).
-
